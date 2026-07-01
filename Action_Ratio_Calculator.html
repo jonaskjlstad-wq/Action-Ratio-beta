@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Action Ratio Calculator</title>
+<style>
+body{font-family:Arial,sans-serif;background:#1b1b1b;color:#fff;max-width:700px;margin:auto;padding:20px}
+h1,h2{text-align:center}
+.card{background:#2b2b2b;border-radius:10px;padding:15px;margin:15px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:flex;flex-direction:column;font-size:.9rem}
+input{padding:10px;font-size:1rem;border-radius:6px;border:none}
+.result{font-size:1.2rem;font-weight:bold;margin-top:10px}
+.good{color:#4ade80}
+.bad{color:#ef4444}
+#ar{font-size:2rem;text-align:center}
+small{color:#bbb}
+</style>
+</head>
+<body>
+<h1>Action Ratio Calculator</h1>
+<div class="card">
+<div id="ar">AR: -</div>
+<small>Mål: 4.90–5.30</small>
+</div>
+
+<div class="card">
+<h2>Key</h2>
+<div class="grid">
+<label>Input<input id="ki" type="number" step="0.01"></label>
+<label>Output<input id="ko" type="number" step="0.01"></label>
+</div>
+<div id="kr" class="result">Ratio: -</div>
+</div>
+
+<div class="card">
+<h2>Wippen</h2>
+<div class="grid">
+<label>Input<input id="wi" type="number" step="0.01"></label>
+<label>Output<input id="wo" type="number" step="0.01"></label>
+</div>
+<div id="wr" class="result">Ratio: -</div>
+</div>
+
+<div class="card">
+<h2>Hammer</h2>
+<div class="grid">
+<label>Input<input id="hi" type="number" step="0.01"></label>
+<label>Output<input id="ho" type="number" step="0.01"></label>
+</div>
+<div id="hr" class="result">Ratio: -</div>
+</div>
+
+<script>
+const ranges={
+kr:[0.49,0.53],
+wr:[1.35,1.45],
+hr:[6.0,7.0],
+ar:[4.9,5.3]
+};
+function setResult(id,val,min,max){
+ const el=document.getElementById(id);
+ if(!isFinite(val)){el.textContent="Ratio: -";el.className="result";return;}
+ el.textContent="Ratio: "+val.toFixed(3)+":1";
+ el.className="result "+((val>=min&&val<=max)?"good":"bad");
+}
+function calc(){
+ let ki=+kiEl.value,ko=+koEl.value,wi=+wiEl.value,wo=+woEl.value,hi=+hiEl.value,ho=+hoEl.value;
+ let kr=ko/ki,wr=wo/wi,hr=ho/hi;
+ setResult("kr",kr,...ranges.kr);
+ setResult("wr",wr,...ranges.wr);
+ setResult("hr",hr,...ranges.hr);
+ const ar=kr*wr*hr;
+ const arEl=document.getElementById("ar");
+ if(isFinite(ar)){
+   arEl.textContent="AR: "+ar.toFixed(3)+":1";
+   arEl.className=(ar>=ranges.ar[0]&&ar<=ranges.ar[1])?"good":"bad";
+ } else {
+   arEl.textContent="AR: -";
+   arEl.className="";
+ }
+}
+const kiEl=ki,koEl=ko,wiEl=wi,woEl=wo,hiEl=hi,hoEl=ho;
+document.querySelectorAll("input").forEach(i=>i.addEventListener("input",calc));
+</script>
+</body>
+</html>
